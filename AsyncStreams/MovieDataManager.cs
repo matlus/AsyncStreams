@@ -20,17 +20,17 @@ namespace AsyncStreams
         public async Task<IEnumerable<Movie>> GetAllMovies()
         {
             var dbConnection = CreateDbConnection();
-            ////DbCommand dbCommand = null;
+            DbCommand dbCommand = null;
             try
             {
                 await dbConnection.OpenAsync().ConfigureAwait(false);
-                var dbCommand = CommandFactoryMovies.CreateCommandForGetAllMovies(dbConnection);
+                dbCommand = CommandFactoryMovies.CreateCommandForGetAllMovies(dbConnection);
                 var dbDataReader = await dbCommand.ExecuteReaderAsync().ConfigureAwait(false);
                 return MapToMovies(dbDataReader);
             }
             finally
             {
-                ////dbCommand?.Dispose();
+                dbCommand?.Dispose();
                 dbConnection.Dispose();
             }
         }
@@ -54,12 +54,12 @@ namespace AsyncStreams
         public async IAsyncEnumerable<Movie> GetAllMoviesAsyncStreaming()
         {
             var dbConnection = CreateDbConnection();
-            ////DbCommand dbCommand = null;
+            DbCommand dbCommand = null;
             DbDataReader dbDataReader = null;
             try
             {
                 await dbConnection.OpenAsync().ConfigureAwait(false);
-                var dbCommand = CommandFactoryMovies.CreateCommandForGetAllMovies(dbConnection);
+                dbCommand = CommandFactoryMovies.CreateCommandForGetAllMovies(dbConnection);
                 dbDataReader = await dbCommand.ExecuteReaderAsync().ConfigureAwait(false);
 
                 var movie = new Movie();
@@ -75,7 +75,7 @@ namespace AsyncStreams
             finally
             {
                 dbDataReader?.Dispose();
-                ////dbCommand?.Dispose();
+                dbCommand?.Dispose();
                 dbConnection.Dispose();
             }
         }

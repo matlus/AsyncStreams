@@ -8,8 +8,6 @@ namespace AsyncStreams
 {
     internal static class CommandFactoryMovies
     {
-        private static DbCommand dbCommandForGetAllMovies;
-
         private static readonly SqlMetaData[] s_sqlMetaDataCreateMovies = new SqlMetaData[]
         {
             new SqlMetaData("Title", SqlDbType.VarChar, 50),
@@ -45,17 +43,11 @@ namespace AsyncStreams
 
         public static DbCommand CreateCommandForGetAllMovies(DbConnection dbConnection)
         {
-            if (dbCommandForGetAllMovies != null)
-            {
-                dbCommandForGetAllMovies.Connection = dbConnection;
-                return dbCommandForGetAllMovies;
-            }
-
-            dbCommandForGetAllMovies = dbConnection.CreateCommand();
-            dbCommandForGetAllMovies.CommandType = CommandType.StoredProcedure;
-            dbCommandForGetAllMovies.CommandText = "dbo.GetAllMovies";
-            AddReturnValueParameter(dbCommandForGetAllMovies);
-            return dbCommandForGetAllMovies;
+            var dbCommand = dbConnection.CreateCommand();
+            dbCommand.CommandType = CommandType.StoredProcedure;
+            dbCommand.CommandText = "dbo.GetAllMovies";
+            AddReturnValueParameter(dbCommand);
+            return dbCommand;
         }
 
         public static DbCommand CreateCommandForGetMoviesByGenre(DbConnection dbConnection, Genre genre)

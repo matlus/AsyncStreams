@@ -24,7 +24,7 @@ namespace AsyncStreams
              * Also modify the Main() method's signature
              * to be async and returning a Task instead of void
              */
-            ////await InitializeDataInDatabase(50000);
+            ////await InitializeDataInDatabase(1000);
 
             ////_movieDataManager = new MovieDataManager();
             ////var program = new Program();
