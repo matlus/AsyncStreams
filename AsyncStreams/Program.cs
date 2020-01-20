@@ -24,23 +24,9 @@ namespace AsyncStreams
              * Also modify the Main() method's signature
              * to be async and returning a Task instead of void
              */
-            ////await InitializeDataInDatabase(1000);
-
-            ////_movieDataManager = new MovieDataManager();
-            ////var program = new Program();
-            ////await program.GetAllMoviesAsyncStreaming();
-            ////await program.GetAllMoviesAsyncStreaming();
-
+            ////await InitializeDataInDatabase(10000);
 
             BenchmarkRunner.Run<Program>();
-        }
-
-        private static async Task InitializeDataInDatabase(int numberOfRecords)
-        {
-            var movieDataManager = new MovieDataManager();
-            s_uniqueMovieTitles = Randomizer.GenerateUniqueAsciiStrings(numberOfRecords);
-            var movies = GetRandomMovies(numberOfRecords);
-            await movieDataManager.CreateMoviesTvpMergeInsertInto(movies);
         }
 
         [GlobalSetup]
@@ -50,7 +36,7 @@ namespace AsyncStreams
         }
 
         [Benchmark]
-        public async ValueTask<int> GetAllMoviesAsyncStreaming()
+        public async Task<int> GetAllMoviesAsyncStreaming()
         {
             var total = 0;
 
@@ -63,7 +49,7 @@ namespace AsyncStreams
         }
 
         [Benchmark]
-        public async ValueTask<int> GetAllMovies()
+        public async Task<int> GetAllMovies()
         {
             var total = 0;
             var allMovies = await _movieDataManager.GetAllMovies();
@@ -74,6 +60,14 @@ namespace AsyncStreams
             }
             
             return total;
+        }
+
+        private static async Task InitializeDataInDatabase(int numberOfRecords)
+        {
+            var movieDataManager = new MovieDataManager();
+            s_uniqueMovieTitles = Randomizer.GenerateUniqueAsciiStrings(numberOfRecords);
+            var movies = GetRandomMovies(numberOfRecords);
+            await movieDataManager.CreateMoviesTvpMergeInsertInto(movies);
         }
 
         private static IEnumerable<Movie> GetRandomMovies(int requiredCount)

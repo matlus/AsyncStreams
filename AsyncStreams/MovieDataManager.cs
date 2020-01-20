@@ -1,5 +1,4 @@
 ﻿using System.Collections.Generic;
-using System.Data;
 using System.Data.Common;
 using System.Data.SqlClient;
 using System.Threading.Tasks;
@@ -26,7 +25,7 @@ namespace AsyncStreams
                 await dbConnection.OpenAsync().ConfigureAwait(false);
                 dbCommand = CommandFactoryMovies.CreateCommandForGetAllMovies(dbConnection);
                 var dbDataReader = await dbCommand.ExecuteReaderAsync().ConfigureAwait(false);
-                return MapToMovies(dbDataReader);
+                return await MapToMovies(dbDataReader);
             }
             finally
             {
@@ -35,11 +34,11 @@ namespace AsyncStreams
             }
         }
 
-        private static IEnumerable<Movie> MapToMovies(DbDataReader dbDataReader)
+        private static async Task<IEnumerable<Movie>> MapToMovies(DbDataReader dbDataReader)
         {
             var movies = new List<Movie>();
 
-            while (dbDataReader.Read())
+            while (await dbDataReader.ReadAsync())
             {
                 movies.Add(new Movie(
                     title: (string)dbDataReader[0],
@@ -60,10 +59,10 @@ namespace AsyncStreams
             {
                 await dbConnection.OpenAsync().ConfigureAwait(false);
                 dbCommand = CommandFactoryMovies.CreateCommandForGetAllMovies(dbConnection);
-                dbDataReader = await dbCommand.ExecuteReaderAsync().ConfigureAwait(false);
+                dbDataReader = await dbCommand.ExecuteReaderAsync().ConfigureAwait(false);                
 
                 var movie = new Movie();
-                while (dbDataReader.Read())
+                while (await dbDataReader.ReadAsync())
                 {
                     movie.Title = (string)dbDataReader[0];
                     movie.Genre = GenreParser.Parse((string)dbDataReader[1]);
