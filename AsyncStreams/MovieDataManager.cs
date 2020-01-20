@@ -81,12 +81,11 @@ namespace AsyncStreams
 
         public async Task CreateMoviesTvpMergeInsertInto(IEnumerable<Movie> movies)
         {
-            DbConnection dbConnection = null;
+            DbConnection dbConnection = CreateDbConnection();
             DbTransaction dbTransaction = null;
             DbCommand dbCommand = null;
             try
             {
-                dbConnection = CreateDbConnection();
                 await dbConnection.OpenAsync().ConfigureAwait(false);
                 dbTransaction = dbConnection.BeginTransaction();
                 dbCommand = CommandFactoryMovies.CreateCommandForCreateMoviesTvpMergeInsertInto(dbConnection, dbTransaction, movies);

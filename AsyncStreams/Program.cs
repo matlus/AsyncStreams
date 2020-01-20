@@ -12,9 +12,8 @@ namespace AsyncStreams
     {
         private static readonly int[] s_validYears = new int[] { 2000, 2001, 2002, 2003, 2004, 2005, 2006, 2007, 2008, 2009, 2010, 2011, 2012, 2013, 2014, 2015, 2016, 2017, 2018, 2019 };
         private static readonly string[] s_validGenres = GenreParser.GenreValues.ToArray();
-        private static string[] s_uniqueMovieTitles;
 
-        private MovieDataManager _movieDataManager;
+        private readonly MovieDataManager _movieDataManager;
 
         static void Main()
         {
@@ -29,8 +28,7 @@ namespace AsyncStreams
             BenchmarkRunner.Run<Program>();
         }
 
-        [GlobalSetup]
-        public void Initialize()
+        public Program()
         {
             _movieDataManager = new MovieDataManager();
         }
@@ -65,17 +63,17 @@ namespace AsyncStreams
         private static async Task InitializeDataInDatabase(int numberOfRecords)
         {
             var movieDataManager = new MovieDataManager();
-            s_uniqueMovieTitles = Randomizer.GenerateUniqueAsciiStrings(numberOfRecords);
-            var movies = GetRandomMovies(numberOfRecords);
+            var uniqueMovieTitles = Randomizer.GenerateUniqueAsciiStrings(numberOfRecords);
+            var movies = GetRandomMovies(numberOfRecords, uniqueMovieTitles);
             await movieDataManager.CreateMoviesTvpMergeInsertInto(movies);
         }
 
-        private static IEnumerable<Movie> GetRandomMovies(int requiredCount)
+        private static IEnumerable<Movie> GetRandomMovies(int requiredCount, string[] uniqueMovieTitles)
         {
             var count = 0;
             do
             {
-                yield return CreateRandomMovie(s_uniqueMovieTitles[count]);
+                yield return CreateRandomMovie(uniqueMovieTitles[count]);
                 count++;
             } while (count < requiredCount);
         }
