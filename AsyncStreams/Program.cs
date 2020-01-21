@@ -38,7 +38,7 @@ namespace AsyncStreams
         {
             var total = 0;
 
-            await foreach (var movie in _movieDataManager.GetAllMoviesAsyncStreaming())
+            await foreach (var movie in _movieDataManager.GetAllMoviesAsyncStreaming().ConfigureAwait(false))
             {
                 total += movie.Year;
             }
@@ -50,7 +50,7 @@ namespace AsyncStreams
         public async Task<int> GetAllMovies()
         {
             var total = 0;
-            var allMovies = await _movieDataManager.GetAllMovies();
+            var allMovies = await _movieDataManager.GetAllMovies().ConfigureAwait(false);
 
             foreach (var movie in allMovies)
             {

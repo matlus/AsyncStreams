@@ -62,7 +62,7 @@ namespace AsyncStreams
                 dbDataReader = await dbCommand.ExecuteReaderAsync().ConfigureAwait(false);                
 
                 var movie = new Movie();
-                while (await dbDataReader.ReadAsync())
+                while (await dbDataReader.ReadAsync().ConfigureAwait(false))
                 {
                     movie.Title = (string)dbDataReader[0];
                     movie.Genre = GenreParser.Parse((string)dbDataReader[1]);
