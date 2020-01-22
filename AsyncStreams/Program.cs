@@ -87,7 +87,7 @@ namespace AsyncStreams
                 title: title,
                 genre: GenreParser.Parse(shuffledGenres[0]),
                 year: shuffledYears[0],
-                imageUrl: Randomizer.GetRandomAciiString(50));
+                imageUrl: "http://www." + Randomizer.GetRandomAciiStringNoPunctuations(20) + ".com");
         }
     }
 }

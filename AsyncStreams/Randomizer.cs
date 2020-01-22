@@ -84,31 +84,56 @@ namespace AsyncStreams
         public static string GetRandomAciiString(int length)
         {
             const int NUMERIC = 0;
-            const int LOWERCASE = 1;
             const int UPPERCASE = 2;
-            const int PUNCT = 3;
-            var random = new Random(GetRandomNumber());
+            const int PUNCT = 3;            
 
             StringBuilder sb = new StringBuilder();
 
             //ensure at least one of each type occurs 
-            sb.Append(Convert.ToChar(random.Next(97, 122))); //lowercase
-            sb.Append(Convert.ToChar(random.Next(65, 90))); //uppercase
-            sb.Append(Convert.ToChar(random.Next(48, 57))); //numeric
-            sb.Append(Convert.ToChar(s_punctuationACIICodes[random.Next(0, s_punctuationACIICodes.Length)])); //punctuation
+            sb.Append(Convert.ToChar(GetRandomNumberBetween(97, 123))); //lowercase
+            sb.Append(Convert.ToChar(GetRandomNumberBetween(65, 91))); //uppercase
+            sb.Append(Convert.ToChar(GetRandomNumberBetween(48, 58))); //numeric
+            sb.Append(Convert.ToChar(s_punctuationACIICodes[GetRandomNumberBetween(0, s_punctuationACIICodes.Length)])); //punctuation
 
             char ch;
             for (int i = 0; i < length - 4; i++)
-            {
-                int rnd = random.Next(0, 3);
+            {                
+                int rnd = GetRandomNumberBetween(0, 4);
                 switch (rnd)
                 {
-                    case LOWERCASE: ch = Convert.ToChar(random.Next(97, 122)); break;
-                    case UPPERCASE: ch = Convert.ToChar(random.Next(65, 90)); break;
-                    case NUMERIC: ch = Convert.ToChar(random.Next(48, 57)); break;
-                    case PUNCT: ch = Convert.ToChar(s_punctuationACIICodes[random.Next(0, s_punctuationACIICodes.Length)]); break;
+                    case UPPERCASE: ch = Convert.ToChar(GetRandomNumberBetween(65, 91)); break;
+                    case NUMERIC: ch = Convert.ToChar(GetRandomNumberBetween(48, 58)); break;
+                    case PUNCT: ch = Convert.ToChar(s_punctuationACIICodes[GetRandomNumberBetween(0, s_punctuationACIICodes.Length)]); break;
+                    default: ch = Convert.ToChar(GetRandomNumberBetween(97, 123)); break;
+                }
+                sb.Append(ch);
+            }
+            return sb.ToString();
+        }
+
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2233:OperationsShouldNotOverflow", MessageId = "length-4")]
+        public static string GetRandomAciiStringNoPunctuations(int length)
+        {
+            const int NUMERIC = 0;
+            const int UPPERCASE = 2;            
+
+            StringBuilder sb = new StringBuilder();
+
+            //ensure at least one of each type occurs 
+            sb.Append(Convert.ToChar(GetRandomNumberBetween(97, 123))); //lowercase
+            sb.Append(Convert.ToChar(GetRandomNumberBetween(65, 91))); //uppercase
+            sb.Append(Convert.ToChar(GetRandomNumberBetween(48, 58))); //numeric            
+
+            char ch;
+            for (int i = 0; i < length - 3; i++)
+            {
+                int rnd = GetRandomNumberBetween(0, 3);
+                switch (rnd)
+                {
+                    case UPPERCASE: ch = Convert.ToChar(GetRandomNumberBetween(65, 91)); break;
+                    case NUMERIC: ch = Convert.ToChar(GetRandomNumberBetween(48, 58)); break;
                     default:
-                        ch = Convert.ToChar(random.Next(97, 122)); break;
+                        ch = Convert.ToChar(GetRandomNumberBetween(97, 123)); break;
                 }
                 sb.Append(ch);
             }
