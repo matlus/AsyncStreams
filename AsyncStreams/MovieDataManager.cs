@@ -20,15 +20,17 @@ namespace AsyncStreams
         {
             var dbConnection = CreateDbConnection();
             DbCommand dbCommand = null;
+            DbDataReader dbDataReader = null;
             try
             {
                 await dbConnection.OpenAsync().ConfigureAwait(false);
                 dbCommand = CommandFactoryMovies.CreateCommandForGetAllMovies(dbConnection);
-                var dbDataReader = await dbCommand.ExecuteReaderAsync().ConfigureAwait(false);
+                dbDataReader = await dbCommand.ExecuteReaderAsync().ConfigureAwait(false);
                 return await MapToMovies(dbDataReader);
             }
             finally
             {
+                dbDataReader?.Dispose();
                 dbCommand?.Dispose();
                 dbConnection.Dispose();
             }
